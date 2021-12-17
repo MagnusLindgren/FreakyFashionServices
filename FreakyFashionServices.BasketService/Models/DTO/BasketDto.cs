@@ -1,8 +1,13 @@
 ﻿namespace FreakyFashionServices.BasketService.Models.DTO
 {
+    public class Items
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
     public class BasketDto
     {
         public string Identifier { get; set; }
-        public Array Items { get; set; }
+        public Items Items { get; set; }
     }
 }
