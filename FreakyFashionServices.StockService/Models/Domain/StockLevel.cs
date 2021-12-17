@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FreakyFashionServices.CatalogService.Models.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreakyFashionServices.StockService.Models.Domain
 {
@@ -9,7 +10,7 @@ namespace FreakyFashionServices.StockService.Models.Domain
             ArticleNumber = articleNumber;
             Stock = stock;
         }
-        
+
         [Key]
         public string ArticleNumber { get; set; }
         public int Stock { get; set; }

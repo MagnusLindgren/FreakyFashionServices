@@ -1,4 +1,5 @@
-﻿using FreakyFashionServices.StockService.Data;
+﻿using FreakyFashionServices.CatalogService.Models.Domain;
+using FreakyFashionServices.StockService.Data;
 using FreakyFashionServices.StockService.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 

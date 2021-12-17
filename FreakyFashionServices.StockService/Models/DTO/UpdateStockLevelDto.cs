@@ -1,4 +1,6 @@
-﻿namespace FreakyFashionServices.StockService.Controllers
+﻿using FreakyFashionServices.CatalogService.Models.Domain;
+
+namespace FreakyFashionServices.StockService.Controllers
 {
     public class UpdateStockLevelDto
     {

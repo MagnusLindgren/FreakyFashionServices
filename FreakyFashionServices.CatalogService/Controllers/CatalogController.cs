@@ -21,8 +21,10 @@ namespace FreakyFashionServices.CatalogService.Controllers
         {
             var product = new Product(
                 addProductDto.Name, 
-                addProductDto.Description, 
-                addProductDto.Price, 
+                addProductDto.Description,
+                addProductDto.ImgUrl,
+                addProductDto.Price,
+                addProductDto.ArticleNumber,
                 addProductDto.UrlSlug
                 );
 
@@ -30,7 +32,7 @@ namespace FreakyFashionServices.CatalogService.Controllers
 
             Context.SaveChanges();
 
-            return NoContent();
+            return Created("", null);
         }
 
         [HttpGet]
@@ -41,20 +43,13 @@ namespace FreakyFashionServices.CatalogService.Controllers
                 Id = x.Id,
                 Name = x.Name, 
                 Description = x.Description,
+                ImgUrl = x.ImgUrl,
                 Price = x.Price,
+                ArticleNumber = x.ArticleNumber,
                 UrlSlug = x.UrlSlug
             });
 
             return productDtos;
         }
-    }
-
-    public class ProductDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Price { get; set; }
-        public string UrlSlug { get; set; }
     }
 }
