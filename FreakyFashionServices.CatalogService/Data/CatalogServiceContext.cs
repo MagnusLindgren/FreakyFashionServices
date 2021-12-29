@@ -10,7 +10,6 @@ namespace FreakyFashionServices.CatalogService.Data
         public CatalogServiceContext(DbContextOptions<CatalogServiceContext> options)
             : base(options)
         {
-
         }
     }
 }
