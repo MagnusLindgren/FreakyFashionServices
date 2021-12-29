@@ -1,6 +1,7 @@
 ﻿using FreakyFashionServices.BasketService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace FreakyFashionServices.BasketService.Controllers
 {
@@ -13,12 +14,28 @@ namespace FreakyFashionServices.BasketService.Controllers
             Cache = cache;
         }
 
-        public IDistributedCache Cache { get; }
+        private IDistributedCache Cache { get; }
 
         [HttpPut("{identifier}")]
         public IActionResult UpdateBasket(BasketDto basketDto)
         {
+            var serializedBasket = JsonSerializer.Serialize(basketDto);
+
+            Cache.SetString(basketDto.Identifier, serializedBasket);
+
             return NoContent();
+        }
+
+        [HttpGet("{identifier}")]
+        public ActionResult<BasketDto> GetBasket(string identifier)
+        {
+            var basket = Cache.Get(identifier);
+
+            if (basket == null)
+                return NotFound();
+
+            var basketDto = basket;
+            return Ok(basketDto);
         }
     }
 }
