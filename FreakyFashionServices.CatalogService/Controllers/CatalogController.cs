@@ -32,7 +32,7 @@ namespace FreakyFashionServices.CatalogService.Controllers
 
             Context.SaveChanges();
 
-            return Created("", null);
+            return Created("", product);
         }
 
         [HttpGet]
