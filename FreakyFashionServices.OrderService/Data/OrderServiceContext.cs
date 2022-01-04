@@ -10,7 +10,6 @@ namespace FreakyFashionServices.OrderService.Data
         public OrderServiceContext(DbContextOptions<OrderServiceContext> options)
             : base(options)
         {
-
         }
     }
 }
