@@ -21,17 +21,21 @@ namespace FreakyFashionServices.OrderService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(string identifier)
+        public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
-            var basket = GetBasket(identifier);
+            var basket = GetBasket(orderDto.Identifier);
 
             if(basket is null) return NotFound();
 
             var order = new Order(
-                
+                identifier: orderDto.Identifier,
+                customer: orderDto.Customer               
                 );
 
-            return Created("", null);
+            Context.Add(order);
+            Context.SaveChanges();
+
+            return Created("", order.OrderId);
         }
 
         private async Task<BasketDto> GetBasket(string identifier)
@@ -44,7 +48,9 @@ namespace FreakyFashionServices.OrderService.Controllers
 
             var serializedBasket = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<BasketDto>(serializedBasket);
+            BasketDto basket = JsonSerializer.Deserialize<BasketDto>(serializedBasket);
+
+            return basket;
         }
     }
 }
