@@ -25,17 +25,18 @@ namespace FreakyFashionServices.OrderService.Controllers
         {
             var basket = GetBasket(orderDto.Identifier);
 
-            if(basket is null) return NotFound();
+            if(basket == null) 
+                return NotFound();
 
-            var order = new Order(
-                identifier: orderDto.Identifier,
-                customer: orderDto.Customer               
-                );
-
-            Context.Add(order);
+            var newOrder = await Context.Order.AddAsync(new Order()
+            {
+                Customer = orderDto.Customer,
+                OrderLine = (ICollection<OrderLine>)basket
+            });
+                
             Context.SaveChanges();
 
-            return Created("", order.OrderId);
+            return Created("orderId: ", newOrder.Entity.Id);
         }
 
         private async Task<BasketDto> GetBasket(string identifier)

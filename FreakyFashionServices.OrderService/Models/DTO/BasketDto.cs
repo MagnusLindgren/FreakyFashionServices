@@ -4,7 +4,7 @@
     {
         public string Identifier { get; set; }
 
-        public IEnumerable<Item> Items { get; set; }
+        public ICollection<Item> Items { get; set; }
 
         public class Item
         {
