@@ -34,7 +34,10 @@ namespace FreakyFashionServices.BasketService.Controllers
             if (basket == null)
                 return NotFound();
 
-            var basketDto = basket;
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            var basketDto = JsonSerializer.Deserialize<BasketDto>(basket, options);
+
             return Ok(basketDto);
         }
     }

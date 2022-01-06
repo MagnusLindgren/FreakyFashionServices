@@ -1,4 +1,5 @@
-﻿using FreakyFashionServices.OrderService.Data;
+﻿using AutoMapper;
+using FreakyFashionServices.OrderService.Data;
 using FreakyFashionServices.OrderService.Models.Domain;
 using FreakyFashionServices.OrderService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -23,20 +24,18 @@ namespace FreakyFashionServices.OrderService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
-            var basket = GetBasket(orderDto.Identifier);
+            var basket = await GetBasket(orderDto.Identifier);
 
-            if(basket == null) 
+            if(basket.Identifier == null || basket.Items == null) 
                 return NotFound();
 
-            var newOrder = await Context.Order.AddAsync(new Order()
-            {
-                Customer = orderDto.Customer,
-                OrderLine = (ICollection<OrderLine>)basket
-            });
+            var newOrder = NewOrder(orderDto.Customer, basket);
+
+            Context.Add(newOrder);
                 
             Context.SaveChanges();
 
-            return Created("orderId: ", newOrder.Entity.Id);
+            return Created("", newOrder.Id);
         }
 
         private async Task<BasketDto> GetBasket(string identifier)
@@ -45,13 +44,27 @@ namespace FreakyFashionServices.OrderService.Controllers
 
             var response = await client.GetAsync($"{BasketServiceConnection}{identifier}");
 
-            if(!response.IsSuccessStatusCode) return null;
+            if(!response.IsSuccessStatusCode) 
+                return null;
 
             var serializedBasket = await response.Content.ReadAsStringAsync();
 
-            BasketDto basket = JsonSerializer.Deserialize<BasketDto>(serializedBasket);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            return basket;
+            return JsonSerializer.Deserialize<BasketDto>(serializedBasket, options);
+        }
+
+        private Order NewOrder(string customer, BasketDto basketDto)
+        {
+            return new Order
+            {
+                Customer = customer,
+                OrderLines = basketDto.Items.Select(x => new Order.OrderLine
+                {
+                    ProductId = x.ProductId,
+                    Quantity = x.Quantity
+                }).ToList()
+            };
         }
     }
 }

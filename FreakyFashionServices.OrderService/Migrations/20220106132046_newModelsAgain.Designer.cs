@@ -3,6 +3,7 @@ using FreakyFashionServices.OrderService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreakyFashionServices.OrderService.Migrations
 {
     [DbContext(typeof(OrderServiceContext))]
-    partial class OrderServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20220106132046_newModelsAgain")]
+    partial class newModelsAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace FreakyFashionServices.OrderService.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("FreakyFashionServices.OrderService.Models.Domain.Order+OrderLine", b =>
+            modelBuilder.Entity("FreakyFashionServices.OrderService.Models.Domain.OrderLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,10 +65,10 @@ namespace FreakyFashionServices.OrderService.Migrations
                     b.ToTable("OrderLine");
                 });
 
-            modelBuilder.Entity("FreakyFashionServices.OrderService.Models.Domain.Order+OrderLine", b =>
+            modelBuilder.Entity("FreakyFashionServices.OrderService.Models.Domain.OrderLine", b =>
                 {
                     b.HasOne("FreakyFashionServices.OrderService.Models.Domain.Order", "Order")
-                        .WithMany("OrderLines")
+                        .WithMany("OrderLine")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -76,7 +78,7 @@ namespace FreakyFashionServices.OrderService.Migrations
 
             modelBuilder.Entity("FreakyFashionServices.OrderService.Models.Domain.Order", b =>
                 {
-                    b.Navigation("OrderLines");
+                    b.Navigation("OrderLine");
                 });
 #pragma warning restore 612, 618
         }

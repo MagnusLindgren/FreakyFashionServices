@@ -4,6 +4,14 @@
     {
         public int Id { get; set; }
         public string Customer { get; set; }
-        public ICollection<OrderLine> OrderLine { get; set; }
+        public IEnumerable<OrderLine> OrderLines { get; set; }
+
+        public  class OrderLine
+        {
+            public int Id { get; set; }
+            public string ProductId { get; set; }
+            public int Quantity { get; set; }
+            public Order Order { get; set; }
+        }
     }
 }
