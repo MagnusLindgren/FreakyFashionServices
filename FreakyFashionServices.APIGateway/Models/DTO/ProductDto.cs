@@ -9,5 +9,6 @@
         public int Price { get; set; }
         public string ArticleNumber { get; set; }
         public string UrlSlug { get; set; }
+        public int Stock { get; set; }
     }
 }

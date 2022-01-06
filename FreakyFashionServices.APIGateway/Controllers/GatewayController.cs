@@ -17,15 +17,21 @@ namespace FreakyFashionServices.APIGateway.Controllers
             this.httpClientFactory = httpClientFactory;
         }
 
+        [HttpPost("products")]
+        public async Task<IActionResult> AddProduct()
+        {
+            return Ok();
+        }
+
         [HttpGet("products")]
         public async Task<IActionResult> GetProducts()
         {
-            var productDto = await FetchProducts();
+            var productsDto = await FetchProducts();
 
-            return Ok(productDto);
+            return Ok(productsDto);
         }
 
-        private async Task<ProductDto> FetchProducts()
+        private async Task<ProductsDto> FetchProducts()
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
@@ -38,28 +44,65 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            ProductDto productDto = null;
+            ProductsDto productDtos = null;
 
             if (!httpResponseMessage.IsSuccessStatusCode)
-                return productDto;
+                return productDtos;
 
             using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            var catalogServiceProductDto = await JsonSerializer.DeserializeAsync<CatalogService.ProductDto>(contentStream, options);
+            var catalogServiceProductDto = await JsonSerializer.DeserializeAsync<List<CatalogService.ProductDto>>(contentStream, options);
 
-            productDto = new ProductDto
+            productDtos = new ProductsDto
             {
-                Name = catalogServiceProductDto.Name,
-                Description = catalogServiceProductDto.Description,
-                ImgUrl = catalogServiceProductDto.ImgUrl,
-                Price = catalogServiceProductDto.Price,
-                ArticleNumber = catalogServiceProductDto.ArticleNumber,
-                UrlSlug = catalogServiceProductDto.UrlSlug
+                Products = catalogServiceProductDto.Select(x => new ProductDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    ImgUrl = x.ImgUrl,
+                    Price = x.Price,
+                    ArticleNumber = x.ArticleNumber,
+                    UrlSlug = x.UrlSlug,
+                    Stock = FetchStock(x.ArticleNumber).Result.StockLevel
+                })
             };
 
-            return productDto;
+            return productDtos;
+        }
+
+        private async Task<StockLevelDto> FetchStock(string articleNumber)
+        {
+            var httpRequestMessage = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"http://localhost:5300/api/stock/{articleNumber}")
+            {
+                Headers = { { HeaderNames.Accept, "application/json" }, }
+            };
+
+            var httpClient = httpClientFactory.CreateClient();
+
+            using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+
+            StockLevelDto stockLevelDto = null;
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                stockLevelDto = new StockLevelDto
+                { ArticleNumber = articleNumber, StockLevel = 0 };
+                return stockLevelDto;
+            }
+                
+
+            using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            var stockServiceStockLevelDto = await JsonSerializer.DeserializeAsync<List<CatalogService.ProductDto>>(contentStream, options);
+
+            return stockLevelDto;
         }
     }
 }
