@@ -35,6 +35,7 @@ namespace FreakyFashionServices.StockService.Controllers
             else
             {
                 stockLevel.Stock = updateStockLevelDto.StockLevel;
+                //Context.StockLevel.Add(stockLevel);
             }
 
             Context.SaveChanges();
