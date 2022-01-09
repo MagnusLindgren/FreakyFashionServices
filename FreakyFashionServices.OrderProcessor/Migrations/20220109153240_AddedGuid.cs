@@ -1,21 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FreakyFashionServices.OrderService.Migrations
+namespace FreakyFashionServices.OrderProcessor.Migrations
 {
-    public partial class newModels : Migration
+    public partial class AddedGuid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Identifier",
-                table: "Order");
-
-            migrationBuilder.RenameColumn(
-                name: "OrderId",
-                table: "Order",
-                newName: "Id");
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Customer = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "OrderLine",
@@ -25,7 +29,7 @@ namespace FreakyFashionServices.OrderService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false)
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,8 +38,7 @@ namespace FreakyFashionServices.OrderService.Migrations
                         name: "FK_OrderLine_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -49,17 +52,8 @@ namespace FreakyFashionServices.OrderService.Migrations
             migrationBuilder.DropTable(
                 name: "OrderLine");
 
-            migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "Order",
-                newName: "OrderId");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Identifier",
-                table: "Order",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.DropTable(
+                name: "Order");
         }
     }
 }

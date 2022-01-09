@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace FreakyFashionServices.OrderService.Models.Domain
+﻿namespace FreakyFashionServices.OrderProcessor.Models.Domain
 {
     public class Order
     {

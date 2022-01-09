@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreakyFashionServices.CatalogService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace FreakyFashionServices.CatalogService.Controllers
 
         private CatalogServiceContext Context { get; set; }
 
-        [HttpPost("{products}")]
+        [HttpPost("products")]
         public IActionResult AddProduct(AddProductDto addProductDto)
         {
             var product = new Product(
@@ -35,7 +35,7 @@ namespace FreakyFashionServices.CatalogService.Controllers
             return Created("", product);
         }
 
-        [HttpGet]
+        [HttpGet("products")]
         public IEnumerable<ProductDto> GetAll()
         {
             var productDtos = Context.Product.Select(x => new ProductDto

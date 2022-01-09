@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using FreakyFashionServices.OrderService.Data;
+﻿using FreakyFashionServices.OrderService.Data;
 using FreakyFashionServices.OrderService.Models.Domain;
 using FreakyFashionServices.OrderService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
+using System.Text;
 using System.Text.Json;
 
 namespace FreakyFashionServices.OrderService.Controllers
@@ -26,16 +27,39 @@ namespace FreakyFashionServices.OrderService.Controllers
         {
             var basket = await GetBasket(orderDto.Identifier);
 
-            if(basket.Identifier == null || basket.Items == null) 
+            if (basket.Identifier == null || basket.Items == null)
                 return NotFound();
 
             var newOrder = NewOrder(orderDto.Customer, basket);
 
-            Context.Add(newOrder);
-                
-            Context.SaveChanges();
+            var factory = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://guest:guest@localhost:5672")
+            };
 
-            return Created("", newOrder.Id);
+            using var connection = factory.CreateConnection();
+
+            using var channel = connection.CreateModel();
+
+            channel.QueueDeclare(
+               queue: "order",
+               durable: true,
+               exclusive: false,
+               autoDelete: false,
+               arguments: null);
+
+            var body = Encoding.UTF8
+               .GetBytes(JsonSerializer.Serialize(newOrder));
+
+            channel.BasicPublish(
+
+               exchange: "",
+
+               routingKey: "order",
+               basicProperties: null,
+               body: body);
+
+            return Accepted(new OrderCreatedDto { OrderId = newOrder.OrderId });
         }
 
         private async Task<BasketDto> GetBasket(string identifier)
@@ -58,6 +82,7 @@ namespace FreakyFashionServices.OrderService.Controllers
         {
             return new Order
             {
+                OrderId = Guid.NewGuid(),
                 Customer = customer,
                 OrderLines = basketDto.Items.Select(x => new Order.OrderLine
                 {

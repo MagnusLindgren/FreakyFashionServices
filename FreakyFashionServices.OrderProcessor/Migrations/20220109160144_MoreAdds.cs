@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace FreakyFashionServices.OrderService.Migrations
+namespace FreakyFashionServices.OrderProcessor.Migrations
 {
-    public partial class ReworkedDB2 : Migration
+    public partial class MoreAdds : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
