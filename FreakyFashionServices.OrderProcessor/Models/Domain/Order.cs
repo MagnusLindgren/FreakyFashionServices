@@ -2,12 +2,6 @@
 {
     public class Order
     {
-        public Order(string customer, IEnumerable<OrderLine> orderLines)
-        {
-            Customer = customer;
-            OrderLines = orderLines;
-        }
-
         public int Id { get; set; }
         public string Customer { get; set; }
         public IEnumerable<OrderLine> OrderLines { get; set; }

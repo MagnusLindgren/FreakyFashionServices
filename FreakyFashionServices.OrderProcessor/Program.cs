@@ -38,14 +38,14 @@ consumer.Received += (sender, e) => {
 
     var dto = JsonSerializer.Deserialize<OrderDto>(json);
 
-    var order = new Order(
-        customer: dto.Customer,
-        orderLines: dto.OrderLines.Select(x => new Order.OrderLine
+    var order = new Order { 
+        Customer = dto.Customer,
+        OrderLines = dto.OrderLines.Select(x => new Order.OrderLine
         {
             ProductId = x.ProductId,
             Quantity = x.Quantity
         }).ToList()
-        );
+        };
 
     orderManager.RegisterOrder(order);
 };

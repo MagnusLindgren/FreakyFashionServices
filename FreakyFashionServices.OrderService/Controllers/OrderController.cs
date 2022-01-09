@@ -2,6 +2,8 @@
 using FreakyFashionServices.OrderService.Models.Domain;
 using FreakyFashionServices.OrderService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
+using System.Text;
 using System.Text.Json;
 
 namespace FreakyFashionServices.OrderService.Controllers
@@ -38,6 +40,46 @@ namespace FreakyFashionServices.OrderService.Controllers
             return Created("", newOrder.Id);
         }
         */
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder(OrderDto orderDto)
+        {
+            var basket = await GetBasket(orderDto.Identifier);
+
+            if (basket.Identifier == null || basket.Items == null)
+                return NotFound();
+
+            var newOrder = NewOrder(orderDto.Customer, basket);
+
+            var factory = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://guest:guest@localhost:5672")
+            };
+
+            using var connection = factory.CreateConnection();
+
+            using var channel = connection.CreateModel();
+
+            channel.QueueDeclare(
+               queue: "order",
+               durable: true,
+               exclusive: false,
+               autoDelete: false,
+               arguments: null);
+
+            var body = Encoding.UTF8
+               .GetBytes(JsonSerializer.Serialize(newOrder));
+
+            channel.BasicPublish(
+
+               exchange: "",
+
+               routingKey: "order",
+               basicProperties: null,
+               body: body);
+
+            return Accepted();
+        }
 
         private async Task<BasketDto> GetBasket(string identifier)
         {
