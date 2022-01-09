@@ -23,10 +23,8 @@ namespace FreakyFashionServices.APIGateway.Controllers
         [HttpPost("orders")]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
-            var basket = await FetchBasket(orderDto.Identifier);
-
             var orderJson = new StringContent(
-                JsonSerializer.Serialize(basket),
+                JsonSerializer.Serialize(orderDto),
                 Encoding.UTF8,
                 Application.Json);
 
@@ -34,7 +32,13 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.PostAsync("http://localhost:5100/api/order", orderJson);
 
-            return Created("", null);
+            using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            var response = await JsonSerializer.DeserializeAsync<OrderCreatedDto>(contentStream, options);
+
+            return Accepted(response.Id);
         }
 
         // Basket
@@ -203,44 +207,5 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             return stockServiceStockLevelDto;
         }
-
-        // Test Connection 
-        /*
-        private async Task<> ConnectToService(string connectionString)
-        {
-            var httpRequestMessage = new HttpRequestMessage(
-                HttpMethod.Get,
-                connectionString)
-            {
-                Headers = { { HeaderNames.Accept, "application/json" }, }
-            };
-
-            var httpClient = httpClientFactory.CreateClient();
-
-            using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-            return httpResponseMessage;
-        }*/
-        /*
-        private async Task<T> FetchAsync<T>(string url)
-        {
-            var httpRequestMessage = new HttpRequestMessage(
-                HttpMethod.Get, url)
-            {
-                Headers = { { HeaderNames.Accept, "application/json" }, }
-            };
-
-            var httpClient = httpClientFactory.CreateClient();
-
-            using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-            using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
-
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            var responseObj = JsonSerializer.Deserialize<T>(contentStream, options);
-
-            return responseObj;
-        }*/
     }
 }

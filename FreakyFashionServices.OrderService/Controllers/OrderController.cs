@@ -78,7 +78,7 @@ namespace FreakyFashionServices.OrderService.Controllers
                basicProperties: null,
                body: body);
 
-            return Accepted();
+            return Accepted(new OrderCreatedDto { Id = newOrder.Id });
         }
 
         private async Task<BasketDto> GetBasket(string identifier)
@@ -101,6 +101,7 @@ namespace FreakyFashionServices.OrderService.Controllers
         {
             return new Order
             {
+                Id = Guid.NewGuid(),
                 Customer = customer,
                 OrderLines = basketDto.Items.Select(x => new Order.OrderLine
                 {

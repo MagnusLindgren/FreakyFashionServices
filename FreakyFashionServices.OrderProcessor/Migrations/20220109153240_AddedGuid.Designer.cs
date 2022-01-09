@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreakyFashionServices.OrderProcessor.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220109142451_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220109153240_AddedGuid")]
+    partial class AddedGuid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,9 @@ namespace FreakyFashionServices.OrderProcessor.Migrations
 
             modelBuilder.Entity("FreakyFashionServices.OrderProcessor.Models.Domain.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Customer")
                         .IsRequired()
@@ -49,8 +47,8 @@ namespace FreakyFashionServices.OrderProcessor.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductId")
                         .IsRequired()

@@ -2,6 +2,7 @@
 {
     public class OrderDto
     {
+        public Guid Id { get; set; }
         public string Customer { get; set; }
         public IEnumerable<OrderLine> OrderLines { get; set; }
 

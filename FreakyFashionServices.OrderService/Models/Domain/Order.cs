@@ -1,8 +1,10 @@
-﻿namespace FreakyFashionServices.OrderService.Models.Domain
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FreakyFashionServices.OrderService.Models.Domain
 {
     public class Order
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Customer { get; set; }
         public IEnumerable<OrderLine> OrderLines { get; set; }
 
