@@ -22,25 +22,6 @@ namespace FreakyFashionServices.OrderService.Controllers
             BasketServiceConnection = configuration.GetConnectionString("BasketServiceConnection");
         }
 
-        /*
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder(OrderDto orderDto)
-        {
-            var basket = await GetBasket(orderDto.Identifier);
-
-            if(basket.Identifier == null || basket.Items == null) 
-                return NotFound();
-
-            var newOrder = NewOrder(orderDto.Customer, basket);
-
-            Context.Add(newOrder);
-                
-            Context.SaveChanges();
-
-            return Created("", newOrder.Id);
-        }
-        */
-
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
@@ -78,7 +59,7 @@ namespace FreakyFashionServices.OrderService.Controllers
                basicProperties: null,
                body: body);
 
-            return Accepted(new OrderCreatedDto { Id = newOrder.Id });
+            return Accepted(new OrderCreatedDto { OrderId = newOrder.OrderId });
         }
 
         private async Task<BasketDto> GetBasket(string identifier)
@@ -101,7 +82,7 @@ namespace FreakyFashionServices.OrderService.Controllers
         {
             return new Order
             {
-                Id = Guid.NewGuid(),
+                OrderId = Guid.NewGuid(),
                 Customer = customer,
                 OrderLines = basketDto.Items.Select(x => new Order.OrderLine
                 {

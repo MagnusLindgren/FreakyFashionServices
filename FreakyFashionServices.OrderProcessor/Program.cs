@@ -39,7 +39,7 @@ consumer.Received += (sender, e) => {
     var dto = JsonSerializer.Deserialize<OrderDto>(json);
 
     var order = new Order { 
-        Id = dto.Id,
+        OrderId = dto.OrderId,
         Customer = dto.Customer,
         OrderLines = dto.OrderLines.Select(x => new Order.OrderLine
         {
@@ -50,7 +50,7 @@ consumer.Received += (sender, e) => {
 
     orderManager.RegisterOrder(order);
 
-    WriteLine($"Added order: {order.Id}");
+    WriteLine($"Added order: {order.OrderId}");
 };
 
 channel.BasicConsume(

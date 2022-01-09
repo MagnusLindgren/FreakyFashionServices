@@ -38,7 +38,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             var response = await JsonSerializer.DeserializeAsync<OrderCreatedDto>(contentStream, options);
 
-            return Accepted(response.Id);
+            return Accepted(response.OrderId);
         }
 
         // Basket
@@ -124,6 +124,9 @@ namespace FreakyFashionServices.APIGateway.Controllers
         {
             var productsDto = await FetchProducts();
 
+            if(productsDto == null)
+                return NoContent();
+
             var stockLevel = await FetchStock();
 
             var result = productsDto.Select(x =>
@@ -140,7 +143,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"http://localhost:5000/api/Catalog/")
+                $"http://localhost:5000/api/products/")
             {
                 Headers = { { HeaderNames.Accept, "application/json" }, }
             };
@@ -149,32 +152,18 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            ProductsDto productDtos = null;
+            IEnumerable<ProductDto> productDto = null;
 
             if (!httpResponseMessage.IsSuccessStatusCode)
-                return null;
+                return productDto;
 
             using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            var catalogServiceProductDto = await JsonSerializer.DeserializeAsync<IEnumerable<ProductDto>>(contentStream, options);
-            /*
-            productDtos = new ProductsDto
-            {
-                Products = catalogServiceProductDto.Select(x => new ProductDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    ImgUrl = x.ImgUrl,
-                    Price = x.Price,
-                    ArticleNumber = x.ArticleNumber,
-                    UrlSlug = x.UrlSlug,
-                })
-            };*/
+            productDto = await JsonSerializer.DeserializeAsync<IEnumerable<ProductDto>>(contentStream, options);
 
-            return catalogServiceProductDto;
+            return productDto;
         }
 
         private async Task<IEnumerable<StockLevelDto>> FetchStock()
