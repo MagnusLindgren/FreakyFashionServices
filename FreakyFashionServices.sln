@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreakyFashionServices.Baske
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreakyFashionServices.OrderService", "FreakyFashionServices.OrderService\FreakyFashionServices.OrderService.csproj", "{28DBA953-1B89-4732-B90E-C6953A4FF4E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreakyFashionServices.APIGateway", "FreakyFashionServices.APIGateway\FreakyFashionServices.APIGateway.csproj", "{F89F54EB-F0FB-4CFE-806D-8E5FB55CE58F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreakyFashionServices.APIGateway", "FreakyFashionServices.APIGateway\FreakyFashionServices.APIGateway.csproj", "{F89F54EB-F0FB-4CFE-806D-8E5FB55CE58F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreakyFashionServices.OrderProcessor", "FreakyFashionServices.OrderProcessor\FreakyFashionServices.OrderProcessor.csproj", "{E7140C1C-919F-425D-8F59-EA871B4294FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{F89F54EB-F0FB-4CFE-806D-8E5FB55CE58F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F89F54EB-F0FB-4CFE-806D-8E5FB55CE58F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F89F54EB-F0FB-4CFE-806D-8E5FB55CE58F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7140C1C-919F-425D-8F59-EA871B4294FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7140C1C-919F-425D-8F59-EA871B4294FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7140C1C-919F-425D-8F59-EA871B4294FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7140C1C-919F-425D-8F59-EA871B4294FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

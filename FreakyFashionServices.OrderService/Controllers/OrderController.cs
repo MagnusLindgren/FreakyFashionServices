@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FreakyFashionServices.OrderService.Data;
+﻿using FreakyFashionServices.OrderService.Data;
 using FreakyFashionServices.OrderService.Models.Domain;
 using FreakyFashionServices.OrderService.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +20,7 @@ namespace FreakyFashionServices.OrderService.Controllers
             BasketServiceConnection = configuration.GetConnectionString("BasketServiceConnection");
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
         {
@@ -37,6 +37,7 @@ namespace FreakyFashionServices.OrderService.Controllers
 
             return Created("", newOrder.Id);
         }
+        */
 
         private async Task<BasketDto> GetBasket(string identifier)
         {
