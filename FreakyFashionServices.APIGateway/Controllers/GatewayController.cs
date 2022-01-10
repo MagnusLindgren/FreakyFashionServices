@@ -38,6 +38,9 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             var response = await JsonSerializer.DeserializeAsync<OrderCreatedDto>(contentStream, options);
 
+            if (response == null)
+                return NotFound();
+
             return Accepted(response.OrderId);
         }
 
@@ -81,7 +84,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            BasketDto basketDto = null;
+            BasketDto? basketDto = null;
 
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return basketDto;
@@ -152,7 +155,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            IEnumerable<ProductDto> productDto = null;
+            IEnumerable<ProductDto>? productDto = null;
 
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return productDto;
@@ -179,7 +182,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             using var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            StockLevelDto stockLevelDto = null;
+            StockLevelDto? stockLevelDto = null;
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
