@@ -111,7 +111,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
             var httpClient = httpClientFactory.CreateClient();
 
             using var httpResponseMessage =
-                await httpClient.PostAsync("http://localhost:5000/api/Catalog/products", productJson);
+                await httpClient.PostAsync("http://localhost:5000/api/products", productJson);
 
             using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
 
